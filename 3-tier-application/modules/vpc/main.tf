@@ -18,25 +18,25 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 }
 
-# Private Subnet
-resource "aws_subnet" "private" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet
-  availability_zone = var.az_private
-}
+# # Private Subnet
+# resource "aws_subnet" "private" {
+#   vpc_id            = aws_vpc.main.id
+#   cidr_block        = var.private_subnet
+#   availability_zone = var.az_private
+# }
 
-# Elastic IP
-resource "aws_eip" "nat" {
-  domain = "vpc"
-}
+# # Elastic IP
+# resource "aws_eip" "nat" {
+#   domain = "vpc"
+# }
 
-# NAT Gateway
-resource "aws_nat_gateway" "nat" {
-  subnet_id     = aws_subnet.public.id
-  allocation_id = aws_eip.nat.id
+# # NAT Gateway
+# resource "aws_nat_gateway" "nat" {
+#   subnet_id     = aws_subnet.public.id
+#   allocation_id = aws_eip.nat.id
 
-  depends_on = [aws_internet_gateway.igw]
-}
+#   depends_on = [aws_internet_gateway.igw]
+# }
 
 # Public Route Table
 resource "aws_route_table" "public" {
@@ -54,18 +54,17 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# Private Route Table
-resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.main.id
-}
+# # Private Route Table
+# resource "aws_route_table" "private" {
+#   vpc_id = aws_vpc.main.id
+# }
 
-resource "aws_route" "private_nat" {
-  route_table_id         = aws_route_table.private.id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat.id
-}
+# resource "aws_route" "private_nat" {
+#   route_table_id         = aws_route_table.private.id
+#   destination_cidr_block = "0.0.0.0/0"
+# }
 
-resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.private.id
-  route_table_id = aws_route_table.private.id
-}
+# resource "aws_route_table_association" "private" {
+#   subnet_id      = aws_subnet.public.id
+#   route_table_id = aws_route_table.private.id
+# }
