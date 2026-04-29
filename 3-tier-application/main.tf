@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 
@@ -16,4 +16,15 @@ resource "aws_dynamodb_table" "terraform_lock" {
     name = "LockID"
     type = "S"
   }
+}
+
+
+module "vpc" {
+  source = "./modules/vpc"
+
+  vpc_cidr        = var.vpc_cidr
+  public_subnet   = var.public_subnet
+  private_subnet  = var.private_subnet
+  az_public       = var.az_public
+  az_private      = var.az_private
 }
